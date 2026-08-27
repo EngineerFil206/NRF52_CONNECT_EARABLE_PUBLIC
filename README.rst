@@ -1,6 +1,6 @@
 .. _nrf52_emg:
 
-NRF52 EMG BLE Stream using Nordic Connect SDK with Zephyr v2.5.1
+NRF52 EMG BLE Stream using Nordic nRF Connect SDK v2.5.1
 ####################
 
 Overview
