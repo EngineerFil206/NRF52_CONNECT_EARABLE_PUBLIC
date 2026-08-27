@@ -3,7 +3,7 @@
 // ________________________________________________________________
 
 
-// Import Zephyr SDK v2.5.1 libraries
+// Import Zephyr and other nRF Connect SDK v2.5.1 libraries
 
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
