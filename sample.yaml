@@ -1,0 +1,15 @@
+sample:
+  description: nRF52840 EMG over BLE notification sample
+  name: nrf52 emg
+common:
+  tags: application
+  integration_platforms:
+    - native_posix
+  harness: console
+  harness_config:
+    type: one_line
+    regex:
+      - ".*"
+tests:
+  sample.basic.emg:
+    tags: application
