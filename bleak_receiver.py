@@ -11,6 +11,12 @@ from collections import deque
 from bleak import BleakScanner, BleakClient
 from PyQt6.QtGui import QGuiApplication
 
+from pathlib import Path
+
+current_dir = Path(__file__).resolve().parent
+new_folder = current_dir / "results"
+new_folder.mkdir(parents=True, exist_ok=True)
+
 TARGET_NAME = "NRF52_EMG"
 CHARACTERISTIC_UUID = "e9ea0002-e19b-482d-9293-c7907585fc48"
 
