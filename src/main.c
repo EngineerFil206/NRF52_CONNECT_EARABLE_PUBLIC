@@ -53,15 +53,15 @@ K_WORK_DEFINE(adc_work, adc_work_handler);
 
 // ADC buffer properties
 #define SAADC_SAMPLE_INTERVAL_US 5
-#define SAADC_BUFFER_SIZE 70 // Had to be changed to 70 after sampling bug discovered (discussed in section 5.5 in final report)
+#define SAADC_BUFFER_SIZE 200 // Had to be changed to 70 after sampling bug discovered (discussed in section 5.5 in final report)
 
-// 50 microseconds per sample (is period) and 200 values required to trigger event.
-// f=1/T, therefore 1/(50x10-6) = 20,000 hz
+// 5 microseconds per sample (is period) and 200 values required to trigger event.
+// f=1/T, therefore 1/(5*10-6) = 200,000 hz
 // but thats for ADC sample averages
-// the actuall number of samples per second that BLE will transmit is 20,000 hz / 200 buffer = 100 averaged samples per second
+// the actuall number of samples per second that BLE will transmit is 200,000 hz / 200 buffer = 1000 averaged samples per second
 
 // BLE_SAMP_FREQUENCY = (1 / (SAADC_SAMPLE_INTERVAL_US / 1000000)) / (SAADC_BUFFER_SIZE)
-// print((1 / (50 / 1000000)) / (200))
+// print((1 / (5 / 1000000)) / (200))
 
 // ---------------------------------------------------------------------------------------------------------------------------
 
