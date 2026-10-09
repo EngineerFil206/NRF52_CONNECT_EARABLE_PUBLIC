@@ -75,7 +75,7 @@ K_WORK_DEFINE(adc_work, adc_work_handler);
 
 // ADC buffer properties
 #define SAADC_SAMPLE_INTERVAL_US 5
-#define SAADC_BUFFER_SIZE 20 // Had to be changed to 70 after sampling bug discovered (discussed in section 5.5 in final report)
+#define SAADC_BUFFER_SIZE 200 // Had to be changed to 70 after sampling bug discovered (discussed in section 5.5 in final report)
 
 // 5 microseconds per sample (is period) and 200 values required to trigger event.
 // f=1/T, therefore 1/(5*10-6) = 200,000 hz
@@ -124,6 +124,7 @@ static void configure_timer(void)
 
 static uint32_t adc_counter = 0;
 static uint32_t time = 0;
+static uint32_t prevTime = 0;
 
 
 static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
@@ -158,7 +159,42 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
         if (adc_counter >= 5000)
         {
             adc_counter = 0;
-            printk(k_cycle_get_32());
+
+            prevTime = time
+            time = k_cycle_get_32();
+
+            /*
+                CPU is:
+                64 MHz = 64,000,000 Hz
+                
+                Number of clocks = time - prevTime
+
+                printk printed to serial, the following:
+                
+                19201574
+                19693111
+                
+                e.g. 19693111 - 19201574 = 491537
+
+                so 491537 clock ticks have happened for
+                5000 EVT_DONE executions
+
+                ticks / ( ticks / sec )
+
+                is equivilent to:
+
+                ticks *  sec
+                        -----
+                        ticks
+
+                Canceling 'ticks' leaves 'seconds'
+
+                so 491537 / 64,000,000 = 0.0077 sec
+            */
+
+            int32_t calc = (time - prevTime) / 
+
+            printk("%u\n", calc);
         }
 
         break;
