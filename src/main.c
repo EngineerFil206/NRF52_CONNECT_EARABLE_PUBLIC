@@ -37,7 +37,14 @@ LOG_MODULE_REGISTER(MY_ADC_BLE, LOG_LEVEL_DBG);
 
 static struct bt_conn *conn;
 
-volatile uint16_t packet[50];
+volatile uint16_t packet[50] = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
+
 volatile uint8_t packet_index = 0;
 
 // Sample window size for envelope detecting moving average filter
@@ -115,6 +122,8 @@ static void configure_timer(void)
         false);
 }
 
+static uint8_t adc_counter = 0;
+
 static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
 {
     nrfx_err_t err;
@@ -142,55 +151,18 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
 
     case NRFX_SAADC_EVT_DONE:
     {
-        // Average buffer samples into one value
+        adc_counter++;
 
-        int32_t sum = 0;
-
-        for (uint16_t i = 0; i < p_event->data.done.size; i++)
+        if (adc_counter >= 50)
         {
-            sum += p_event->data.done.p_buffer[i];
-        }
+            adc_counter = 0;
 
-        int32_t avg = sum / p_event->data.done.size;
-
-        // Remove DC offset from the averaged sample
-        static int32_t dc_estimate = 0;
-
-        if (dc_estimate == 0)
-            dc_estimate = avg;
-
-        int32_t value = avg - dc_estimate;
-        if (value < 0)
-            value = -value;
-
-        // 40-point moving average of averaged samples
-        env_sum -= env_buffer[env_index];
-        env_buffer[env_index] = value;
-        env_sum += value;
-
-        env_index++;
-        if (env_index >= ENV_WINDOW)
-            env_index = 0;
-
-        uint16_t envelope = (uint16_t)(env_sum / ENV_WINDOW);
-
-        // Slowly track DC baseline
-        dc_estimate += (avg - dc_estimate) / 128;
-
-        if (conn)
-        {
-            packet[packet_index++] = envelope;
-
-            // If 50 main samples have been collected, send one packet using the BLE stack work handler
-            if (packet_index >= 50)
-            {
-                packet_index = 0;
-
+            if (conn) {
                 while (k_work_busy_get(&adc_work)) {}
                 k_work_submit(&adc_work);
             }
         }
-        
+
         break;
     }
 
