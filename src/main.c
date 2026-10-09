@@ -186,11 +186,16 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
             {
                 packet_index = 0;
 
-                while (k_work_busy_get(&adc_work)) {}
-                k_work_submit(&adc_work);
+                if (!k_work_busy_get(&adc_work))
+                {
+                    k_work_submit(&adc_work);
+                }
+                else {
+                    LOG_ERR("BLE busy skipping packet");
+                }
             }
         }
-
+        
         break;
     }
 
