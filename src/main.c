@@ -186,10 +186,8 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
             {
                 packet_index = 0;
 
-                if (!k_work_busy_get(&adc_work))
-                {
-                    k_work_submit(&adc_work);
-                }
+                while (k_work_busy_get(&adc_work)) {}
+                k_work_submit(&adc_work);
             }
         }
 
