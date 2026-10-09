@@ -192,9 +192,9 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
                 so 491537 / 64,000,000 = 0.0077 sec
             */
 
-            int32_t calc = (time - prevTime) / 
-
-            printk("%u\n", calc);
+            float calc = (time - prevTime) / 64000000
+            
+            printk("%f\n", calc);
         }
 
         break;
