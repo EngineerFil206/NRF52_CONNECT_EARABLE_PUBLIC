@@ -1,3 +1,18 @@
+/*
+Fun experiments to do:
+
+ - On line 181, try:
+
+   while (k_work_busy_get()) {
+      // Do nothing untill NOT busy anymore
+   }
+
+   // Then send BLE
+   
+   Hypothesis: Code will error out and complain something about memory)
+   
+*/
+
 // ________________________________________________________________
 // main.c
 // ________________________________________________________________
