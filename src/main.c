@@ -160,7 +160,7 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
         {
             adc_counter = 0;
 
-            prevTime = time
+            prevTime = time;
             time = k_cycle_get_32();
 
             /*
@@ -192,7 +192,7 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
                 so 491537 / 64,000,000 = 0.0077 sec
             */
 
-            float calc = (time - prevTime) / 64000000
+            float calc = (time - prevTime) / 64000000;
             
             printk("%f\n", calc);
         }
