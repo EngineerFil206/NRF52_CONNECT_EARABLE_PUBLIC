@@ -18,6 +18,7 @@ west build -b xiao_ble -p always
 west flash -r uf2
 
 west build; west flash -r uf2; python myserial.py
+west flash -r uf2; python myserial.py
 
 Device name
 ***********
