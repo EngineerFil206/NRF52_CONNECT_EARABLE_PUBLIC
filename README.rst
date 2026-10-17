@@ -13,9 +13,11 @@ EMG value to a BLE client as notifications at a fixed interval.
 Build
 ***********
 
+west build
 west build -b xiao_ble -p always
 west flash -r uf2
 
+west build; west flash -r uf2; python myserial.py
 
 Device name
 ***********
