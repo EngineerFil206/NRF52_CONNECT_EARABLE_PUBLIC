@@ -9,6 +9,14 @@ Overview
 This application samples the SAADC on the nRF52840 and sends the averaged
 EMG value to a BLE client as notifications at a fixed interval.
 
+
+Build
+***********
+
+west build -b xiao_ble -p always
+west flash -r uf2
+
+
 Device name
 ***********
 
