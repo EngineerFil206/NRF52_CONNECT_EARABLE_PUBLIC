@@ -62,13 +62,14 @@ static void adc_work_handler(struct k_work *work)
 
 K_WORK_DEFINE(adc_work, adc_work_handler);
 
-// ---------------------------------------------------------------------------------------------------------------------------
-// Calculating BLE transmission sample rate
-// ---------------------------------------------------------------------------------------------------------------------------
-
 // ADC buffer properties
-#define SAADC_SAMPLE_INTERVAL_US 5
-#define SAADC_BUFFER_SIZE 200 // Had to be changed to 70 after sampling bug discovered (discussed in section 5.5 in final report)
+/*
+Fixed sampling frequency issue, buffer of 200, with interval of
+5 micro seconds was too much demand for SAADC processing
+Therefore changed to buffer of 10 with a 100µs interval
+*/
+#define SAADC_SAMPLE_INTERVAL_US 100
+#define SAADC_BUFFER_SIZE 10
 
 // 5 microseconds per sample (is period) and 200 values required to trigger event.
 // f=1/T, therefore 1/(5*10-6) = 200,000 hz
@@ -185,8 +186,18 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
             if (packet_index >= 50)
             {
                 packet_index = 0;
-                while (k_work_busy_get(&adc_work)) {}
-                k_work_submit(&adc_work);
+
+                /*
+                Brought back skip packet if busy, it is not good to put a blocking
+                `while (true) {}` loop in the time sensitive SAADC handler callback,
+                and having a finite queueing system does not guarantee packets will
+                be saved, meaning if SAADC hz is higher than maximum capable
+                BLE transmission hz, then it is tough luck.
+                */
+                if (!k_work_busy_get(&adc_work))
+                {
+                    k_work_submit(&adc_work);
+                }
             }
         }
 
