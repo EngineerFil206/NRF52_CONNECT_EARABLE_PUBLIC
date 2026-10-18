@@ -68,7 +68,7 @@ Fixed sampling frequency issue, buffer of 200, with interval of
 5 micro seconds was too much demand for SAADC processing
 Therefore changed to buffer of 10 with a 100µs interval
 */
-#define SAADC_SAMPLE_INTERVAL_US 100
+#define SAADC_SAMPLE_INTERVAL_US 50
 #define SAADC_BUFFER_SIZE 10
 
 // 5 microseconds per sample (is period) and 200 values required to trigger event.
