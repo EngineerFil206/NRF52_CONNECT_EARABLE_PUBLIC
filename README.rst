@@ -14,8 +14,9 @@ Build
 ***********
 
 west build
-west build -b xiao_ble -p always
+west build -b xiao_ble --pristine
 west flash -r uf2
+python myserial.py
 
 west build; west flash -r uf2; python myserial.py
 west flash -r uf2; python myserial.py

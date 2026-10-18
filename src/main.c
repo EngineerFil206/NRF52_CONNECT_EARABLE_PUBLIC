@@ -1,18 +1,3 @@
-/*
-Fun experiments to do:
-
- - On line 181, try:
-
-   while (k_work_busy_get()) {
-      // Do nothing untill NOT busy anymore
-   }
-
-   // Then send BLE
-   
-   Hypothesis: Code will error out and complain something about memory)
-
-*/
-
 // ________________________________________________________________
 // main.c
 // ________________________________________________________________
@@ -156,45 +141,10 @@ static void saadc_event_handler(nrfx_saadc_evt_t const *p_event)
     {
         adc_counter++;
 
-        if (adc_counter >= 5000)
+        if (adc_counter >= 2000)
         {
             adc_counter = 0;
-
-            prevTime = time;
-            time = k_cycle_get_32();
-
-            /*
-                CPU is:
-                64 MHz = 64,000,000 Hz
-                
-                Number of clocks = time - prevTime
-
-                printk printed to serial, the following:
-                
-                19201574
-                19693111
-                
-                e.g. 19693111 - 19201574 = 491537
-
-                so 491537 clock ticks have happened for
-                5000 EVT_DONE executions
-
-                ticks / ( ticks / sec )
-
-                is equivilent to:
-
-                ticks *  sec
-                        -----
-                        ticks
-
-                Canceling 'ticks' leaves 'seconds'
-
-                so 491537 / 64,000,000 = 0.0077 sec
-            */
-
-            float calc = (time - prevTime) / 64000000;
-            
-            printk("%f\n", calc);
+            printk("EVT_DONE reached\n");
         }
 
         break;
